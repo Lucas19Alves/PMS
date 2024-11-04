@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Hotel Minas Bahia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-blue-600">Painel Administrativo</h1>
+                <button onclick="logout()" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <!-- Cabeçalho -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Gerenciar Quartos</h2>
+                <button onclick="abrirModalAdicionar()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-plus mr-2"></i>Adicionar Quarto
+                </button>
+            </div>
+
+            <!-- Tabela -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Número</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Capacidade</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Diária (R$)</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaQuartos" class="bg-white divide-y divide-gray-200">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Adicionar/Editar Quarto -->
+    <div id="modalQuarto" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="modalTitulo">Adicionar Quarto</h3>
+                <button onclick="fecharModal()" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="formQuarto" onsubmit="salvarQuarto(event)" class="space-y-4">
+                <input type="hidden" id="quartoId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Número</label>
+                    <input type="text" id="numeroQuarto" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tipo</label>
+                    <select id="tipoQuarto" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="Simples">Simples</option>
+                        <option value="Ventilador com Banheiro">Ventilador com Banheiro</option>
+                        <option value="Ar Condicionado">Ar Condicionado</option>
+                        <option value="Luxo">Luxo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Capacidade</label>
+                    <input type="number" id="capacidadeQuarto" required min="1"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Diária (R$)</label>
+                    <input type="number" id="precoDiaria" required min="0" step="0.01"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" onclick="fecharModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let quartos = [];
+
+        // Funções de manipulação do modal
+        function abrirModalAdicionar() {
+            document.getElementById('modalTitulo').textContent = 'Adicionar Quarto';
+            document.getElementById('quartoId').value = '';
+            document.getElementById('formQuarto').reset();
+            document.getElementById('modalQuarto').classList.remove('hidden');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalQuarto').classList.add('hidden');
+        }
+
+        // Funções de API
+        async function carregarQuartos() {
+            try {
+                const response = await fetch('./api/quartos.php');
+                if (!response.ok) throw new Error('Erro ao carregar quartos');
+                quartos = await response.json();
+                atualizarTabela();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao carregar quartos. Tente novamente.');
+            }
+        }
+
+        function atualizarTabela() {
+            const tbody = document.getElementById('tabelaQuartos');
+            tbody.innerHTML = quartos.map(quarto => `
+                <tr>
+                    <td class="px-6 py-4">${quarto.numero}</td>
+                    <td class="px-6 py-4">${quarto.tipo}</td>
+                    <td class="px-6 py-4">${quarto.capacidade}</td>
+                    <td class="px-6 py-4">${quarto.preco_diaria}</td>
+                    <td class="px-6 py-4">
+                        <select onchange="atualizarStatus(${quarto.id}, this.value)" 
+                                class="border rounded px-2 py-1">
+                            <option value="disponivel" ${quarto.status === 'disponivel' ? 'selected' : ''}>Disponível</option>
+                            <option value="ocupado" ${quarto.status === 'ocupado' ? 'selected' : ''}>Ocupado</option>
+                            <option value="sujo" ${quarto.status === 'sujo' ? 'selected' : ''}>Sujo</option>
+                            <option value="manutencao" ${quarto.status === 'manutencao' ? 'selected' : ''}>Manutenção</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button onclick="editarQuarto(${quarto.id})" class="text-blue-600 hover:text-blue-800 mr-3">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="excluirQuarto(${quarto.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function salvarQuarto(event) {
+            event.preventDefault();
+            
+            const quartoId = document.getElementById('quartoId').value;
+            const dados = {
+                numero: document.getElementById('numeroQuarto').value,
+                tipo: document.getElementById('tipoQuarto').value,
+                capacidade: document.getElementById('capacidadeQuarto').value,
+                preco_diaria: document.getElementById('precoDiaria').value
+            };
+
+            try {
+                const response = await fetch('./api/quartos.php', {
+                    method: quartoId ? 'POST' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ...dados,
+                        id: quartoId,
+                        action: quartoId ? 'update' : 'create'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erro ao salvar quarto');
+                
+                await carregarQuartos();
+                fecharModal();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao salvar quarto. Tente novamente.');
+            }
+        }
+
+        async function atualizarStatus(id, status) {
+            try {
+                const formData = new FormData();
+                formData.append('id', id);
+                formData.append('status', status);
+                formData.append('action', 'update_status');
+
+                const response = await fetch('./api/quartos.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Erro ao atualizar status');
+                
+                await carregarQuartos();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar status. Tente novamente.');
+            }
+        }
+
+        function editarQuarto(id) {
+            const quarto = quartos.find(q => q.id === id);
+            if (!quarto) return;
+
+            document.getElementById('modalTitulo').textContent = 'Editar Quarto';
+            document.getElementById('quartoId').value = quarto.id;
+            document.getElementById('numeroQuarto').value = quarto.numero;
+            document.getElementById('tipoQuarto').value = quarto.tipo;
+            document.getElementById('capacidadeQuarto').value = quarto.capacidade;
+            document.getElementById('precoDiaria').value = quarto.preco_diaria;
+
+            document.getElementById('modalQuarto').classList.remove('hidden');
+        }
+
+        async function excluirQuarto(id) {
+            if (!confirm('Tem certeza que deseja excluir este quarto?')) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('id', id);
+                formData.append('action', 'delete');
+
+                const response = await fetch('./api/quartos.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao excluir quarto');
+                }
+
+                if (data.success) {
+                    await carregarQuartos();
+                } else {
+                    throw new Error('Erro ao excluir quarto');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert(error.message || 'Erro ao excluir quarto. Tente novamente.');
+            }
+        }
+
+        function logout() {
+            window.location.href = './admin.html';
+        }
+
+        // Carregar quartos ao iniciar
+        carregarQuartos();
+    </script>
+</body>
+</html>

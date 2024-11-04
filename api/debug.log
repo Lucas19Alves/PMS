@@ -1,0 +1,44 @@
+Array
+(
+    [HTTP_HOST] => localhost
+    [HTTP_CONNECTION] => keep-alive
+    [HTTP_SEC_CH_UA_PLATFORM] => "Windows"
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+    [HTTP_SEC_CH_UA] => "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"
+    [HTTP_SEC_CH_UA_MOBILE] => ?0
+    [HTTP_ACCEPT] => */*
+    [HTTP_SEC_FETCH_SITE] => same-origin
+    [HTTP_SEC_FETCH_MODE] => cors
+    [HTTP_SEC_FETCH_DEST] => empty
+    [HTTP_REFERER] => http://localhost/PMS/index.html
+    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
+    [HTTP_ACCEPT_LANGUAGE] => pt-PT,pt;q=0.9,en-US;q=0.8,en;q=0.7
+    [HTTP_COOKIE] => PHPSESSID=3i084b53tobvr8ov58nt4vkp7h
+    [PATH] => C:\Program Files\Google\Chrome\Application;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\Hotel MB\AppData\Local\Microsoft\WindowsApps;C:\Users\Hotel MB\flutter\bin;C:\Program Files\Java\jdk1.8.0_221\bin;C:\kotlinc\bin;C:\Users\Hotel MB\adb-fastboot\platform-tools;C:\Users\Hotel MB\AppData\Roaming\npm;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Hotel MB\AppData\Local\Microsoft\WindowsApps;C:\Users\Hotel MB\flutter\bin;C:\Program Files\Java\jdk1.8.0_221\bin;C:\kotlinc\bin;C:\Users\Hotel MB\adb-fastboot\platform-tools;C:\Users\Hotel MB\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Hotel MB\AppData\Roaming\npm
+    [SystemRoot] => C:\Windows
+    [COMSPEC] => C:\Windows\system32\cmd.exe
+    [PATHEXT] => .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+    [WINDIR] => C:\Windows
+    [SERVER_SIGNATURE] => 
+    [SERVER_SOFTWARE] => Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+    [SERVER_NAME] => localhost
+    [SERVER_ADDR] => ::1
+    [SERVER_PORT] => 80
+    [REMOTE_ADDR] => ::1
+    [DOCUMENT_ROOT] => C:/laragon/www
+    [REQUEST_SCHEME] => http
+    [CONTEXT_PREFIX] => 
+    [CONTEXT_DOCUMENT_ROOT] => C:/laragon/www
+    [SERVER_ADMIN] => admin@example.com
+    [SCRIPT_FILENAME] => C:/laragon/www/PMS/api/quartos.php
+    [REMOTE_PORT] => 49377
+    [GATEWAY_INTERFACE] => CGI/1.1
+    [SERVER_PROTOCOL] => HTTP/1.1
+    [REQUEST_METHOD] => GET
+    [QUERY_STRING] => 
+    [REQUEST_URI] => /PMS/api/quartos.php
+    [SCRIPT_NAME] => /PMS/api/quartos.php
+    [PHP_SELF] => /PMS/api/quartos.php
+    [REQUEST_TIME_FLOAT] => 1730761106.5269
+    [REQUEST_TIME] => 1730761106
+)

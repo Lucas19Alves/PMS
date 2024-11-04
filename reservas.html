@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas - Hotel Minas Bahia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Mesma navegação do index.html -->
+    
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Reservas</h2>
+            <button onclick="showNovaReservaModal()" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+                <i class="fas fa-plus mr-2"></i>Nova Reserva
+            </button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="mb-4">
+                <input type="text" placeholder="Buscar reservas..." class="w-full px-4 py-2 border rounded-md">
+            </div>
+
+            <table class="min-w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left">Quarto</th>
+                        <th class="text-left">Hóspede</th>
+                        <th class="text-left">Check-in</th>
+                        <th class="text-left">Check-out</th>
+                        <th class="text-left">Status</th>
+                        <th class="text-left">Valor</th>
+                        <th class="text-left">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="reservasTable">
+                    <!-- Preenchido via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Nova Reserva -->
+    <div id="novaReservaModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <!-- Conteúdo do modal -->
+    </div>
+
+    <script>
+        // Implementar lógica de reservas
+    </script>
+</body>
+</html>
