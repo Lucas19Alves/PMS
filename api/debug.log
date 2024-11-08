@@ -30,7 +30,7 @@ Array
     [CONTEXT_DOCUMENT_ROOT] => C:/laragon/www
     [SERVER_ADMIN] => admin@example.com
     [SCRIPT_FILENAME] => C:/laragon/www/PMS/api/quartos.php
-    [REMOTE_PORT] => 54108
+    [REMOTE_PORT] => 59737
     [GATEWAY_INTERFACE] => CGI/1.1
     [SERVER_PROTOCOL] => HTTP/1.1
     [REQUEST_METHOD] => GET
@@ -38,6 +38,6 @@ Array
     [REQUEST_URI] => /PMS/api/quartos.php
     [SCRIPT_NAME] => /PMS/api/quartos.php
     [PHP_SELF] => /PMS/api/quartos.php
-    [REQUEST_TIME_FLOAT] => 1731063059.9161
-    [REQUEST_TIME] => 1731063059
+    [REQUEST_TIME_FLOAT] => 1731064021.921
+    [REQUEST_TIME] => 1731064021
 )
