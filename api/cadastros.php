@@ -8,9 +8,16 @@ header('Content-Type: application/json');
 try {
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET':
-            $stmt = $pdo->query("SELECT * FROM cadastros ORDER BY nome");
-            echo json_encode($stmt->fetchAll());
+            if (isset($_GET['id'])) {
+                $stmt = $pdo->prepare("SELECT * FROM cadastros WHERE id = ?");
+                $stmt->execute([$_GET['id']]);
+                echo json_encode($stmt->fetch());
+            } else {
+                $stmt = $pdo->query("SELECT * FROM cadastros ORDER BY nome");
+                echo json_encode($stmt->fetchAll());
+            }
             break;
+        ;
 
         case 'POST':
             $action = isset($_POST['action']) ? $_POST['action'] : '';

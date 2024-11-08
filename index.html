@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 min-h-screen">
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
@@ -43,13 +45,13 @@
                 <div class="text-3xl font-bold text-blue-600" id="taxaOcupacao">--</div>
                 <p class="text-gray-600" id="resumoOcupacao">-- de -- quartos ocupados</p>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Disponíveis</h2>
                 <div class="text-3xl font-bold text-green-600" id="quartosDisponiveis">--</div>
                 <p class="text-gray-600">Quartos livres</p>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Ocupados</h2>
                 <div class="text-3xl font-bold text-red-600" id="quartosOcupados">--</div>
@@ -146,20 +148,21 @@
             <div id="formCheckIn" class="hidden">
                 <form id="checkInForm" onsubmit="realizarCheckIn(event)" class="space-y-6">
                     <input type="hidden" id="quartoId">
-                    
+
                     <!-- Titular da Hospedagem -->
                     <div class="border-b pb-4">
                         <h4 class="text-lg font-semibold mb-4">Titular da Hospedagem</h4>
                         <div class="flex gap-4 items-end">
                             <div class="flex-grow">
                                 <label class="block text-sm font-medium text-gray-700">Selecionar Cadastro</label>
-                                <select id="titularSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                        onchange="selecionarTitular(this.value)">
+                                <select id="titularSelect"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                    onchange="selecionarTitular(this.value)">
                                     <option value="">Selecione um cadastro...</option>
                                 </select>
                             </div>
                             <button type="button" onclick="abrirModalCadastroRapido('titular')"
-                                    class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                                 Novo Cadastro
                             </button>
                         </div>
@@ -176,7 +179,7 @@
                             <!-- Lista de acompanhantes adicionados -->
                         </div>
                         <button type="button" onclick="adicionarAcompanhante()"
-                                class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                            class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                             <i class="fas fa-plus mr-2"></i>Adicionar Acompanhante
                         </button>
                     </div>
@@ -189,13 +192,13 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Check-in</label>
                                     <input type="datetime-local" id="dataCheckIn" required
-                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Check-out Previsto</label>
                                     <input type="datetime-local" id="dataCheckOutPrevisto" required
-                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                           onchange="calcularValorTotal()">
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        onchange="calcularValorTotal()">
                                 </div>
                             </div>
                         </div>
@@ -204,19 +207,19 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Valor Base</label>
-                                    <input type="text" id="valorBase" readonly
-                                           class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm">
+                                    <input type="text" id="valorBase" 
+                                        class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Desconto</label>
                                     <input type="number" id="desconto" min="0" step="0.01"
-                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                           onchange="calcularValorTotal()">
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        onchange="calcularValorTotal()">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Valor Total</label>
                                     <input type="text" id="valorTotal" readonly
-                                           class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm font-bold text-lg">
+                                        class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm font-bold text-lg">
                                 </div>
                             </div>
                         </div>
@@ -225,11 +228,10 @@
                     <!-- Botões -->
                     <div class="flex justify-end space-x-2 pt-4">
                         <button type="button" onclick="fecharModal()"
-                                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                             Cancelar
                         </button>
-                        <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                             Confirmar Check-in
                         </button>
                     </div>
@@ -322,8 +324,8 @@
             const ocupados = quartosData.filter(q => q.status === 'ocupado').length;
             const disponiveis = quartosData.filter(q => q.status === 'disponivel').length;
             const sujos = quartosData.filter(q => q.status === 'sujo').length;
-            
-            document.getElementById('taxaOcupacao').textContent = `${Math.round((ocupados/total) * 100)}%`;
+
+            document.getElementById('taxaOcupacao').textContent = `${Math.round((ocupados / total) * 100)}%`;
             document.getElementById('resumoOcupacao').textContent = `${ocupados} de ${total} quartos ocupados`;
             document.getElementById('quartosDisponiveis').textContent = disponiveis;
             document.getElementById('quartosOcupados').textContent = ocupados;
@@ -376,7 +378,7 @@
             const quarto = quartosData.find(q => q.id === quartoId);
             if (!quarto) return;
 
-            switch(quarto.status) {
+            switch (quarto.status) {
                 case 'disponivel':
                     mostrarModalCheckIn(quarto);
                     break;
@@ -396,7 +398,7 @@
             try {
                 const response = await fetch(`./api/checkin.php?quarto_id=${quarto.id}`);
                 const data = await response.json();
-                
+
                 if (data.error) {
                     throw new Error(data.message);
                 }
@@ -506,7 +508,7 @@
                     console.error('Resposta da API:', errorText);
                     throw new Error('Erro ao realizar check-out');
                 }
-                
+
                 const result = await response.json();
                 if (result.success) {
                     alert('Check-out realizado com sucesso!');
@@ -569,7 +571,7 @@
                     console.error('Resposta da API:', errorText);
                     throw new Error('Erro ao liberar quarto');
                 }
-                
+
                 const result = await response.json();
                 if (result.success) {
                     alert('Quarto liberado com sucesso!');
@@ -595,7 +597,7 @@
             try {
                 const response = await fetch('./api/cadastros.php');
                 if (!response.ok) throw new Error('Erro ao carregar cadastros');
-                
+
                 const cadastros = await response.json();
                 const select = document.getElementById('titularSelect');
                 select.innerHTML = '<option value="">Selecione um cadastro...</option>' +
@@ -622,8 +624,17 @@
 
             // Definir data/hora atual como padrão para check-in
             document.getElementById('dataCheckIn').value = dataMinima;
+
+            // Definir o check-out para o dia seguinte no mesmo horário da entrada
+            const dataCheckOut = new Date(agora);
+            dataCheckOut.setDate(dataCheckOut.getDate() + 1); // Adiciona 1 dia
+            const dataCheckOutMinima = dataCheckOut.toISOString().slice(0, 16);
+            document.getElementById('dataCheckOutPrevisto').value = dataCheckOutMinima;
+
+            // Calcular valor total
             calcularValorTotal();
         }
+
 
         // Selecionar titular
         async function selecionarTitular(cadastroId) {
@@ -635,7 +646,7 @@
             try {
                 const response = await fetch(`./api/cadastros.php?id=${cadastroId}`);
                 if (!response.ok) throw new Error('Erro ao carregar dados do cadastro');
-                
+
                 const cadastro = await response.json();
                 document.getElementById('infoTitular').innerHTML = `
                     <div class="p-4 bg-gray-50 rounded-lg">
@@ -662,9 +673,9 @@
             try {
                 const response = await fetch(`./api/cadastros.php?id=${cadastroId}`);
                 if (!response.ok) throw new Error('Erro ao carregar dados do cadastro');
-                
+
                 const cadastro = await response.json();
-                
+
                 // Atualizar o objeto de acompanhantes
                 const index = acompanhantes.findIndex(a => a.id === acompanhanteId);
                 if (index !== -1) {
@@ -681,7 +692,7 @@
                     </div>
                 `;
                 document.getElementById(`infoAcomp_${acompanhanteId}`).classList.remove('hidden');
-                
+
                 // Recalcular valor total
                 calcularValorTotal();
             } catch (error) {
@@ -755,12 +766,12 @@
                 });
 
                 if (!response.ok) throw new Error('Erro ao salvar cadastro');
-                
+
                 const result = await response.json();
                 if (result.success) {
                     await carregarCadastros(); // Recarrega a lista de cadastros
                     fecharModalCadastroRapido();
-                    
+
                     // Se for cadastro de titular, seleciona automaticamente
                     if (tipo === 'titular') {
                         document.getElementById('titularSelect').value = result.id;
@@ -910,7 +921,7 @@
 
             // Carregar cadastros para o select
             await carregarCadastros();
-            
+
             // Inicializar formulário
             inicializarFormularioCheckIn();
         }
@@ -941,7 +952,7 @@
 
             const valorTotalStr = document.getElementById('valorTotal').value;
             const valorTotal = parseFloat(valorTotalStr.replace('R$ ', '').replace('.', '').replace(',', '.'));
-            
+
             const dados = {
                 action: 'create',
                 quarto_id: quartoSelecionado.id,
@@ -967,7 +978,7 @@
                     console.error('Resposta da API:', errorText);
                     throw new Error('Erro ao realizar check-in');
                 }
-                
+
                 const result = await response.json();
                 if (result.success) {
                     alert('Check-in realizado com sucesso!');
@@ -986,13 +997,13 @@
         function fecharModal() {
             // Fecha o modal principal
             document.getElementById('modalQuarto').classList.add('hidden');
-            
+
             // Fecha o modal de cadastro rápido se estiver aberto
             const modalCadastroRapido = document.getElementById('modalCadastroRapido');
             if (modalCadastroRapido) {
                 modalCadastroRapido.classList.add('hidden');
             }
-            
+
             // Limpa as variáveis globais
             quartoSelecionado = null;
             acompanhantes = [];
@@ -1005,15 +1016,15 @@
         }
 
         // Adicionar listener para fechar modal ao clicar fora dele (opcional)
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const modalQuarto = document.getElementById('modalQuarto');
             const modalCadastroRapido = document.getElementById('modalCadastroRapido');
-            
+
             // Se clicou fora do conteúdo do modal
             if (event.target === modalQuarto) {
                 fecharModal();
             }
-            
+
             // Se clicou fora do conteúdo do modal de cadastro rápido
             if (event.target === modalCadastroRapido) {
                 fecharModalCadastroRapido();
@@ -1021,4 +1032,5 @@
         });
     </script>
 </body>
+
 </html>
