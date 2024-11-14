@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa - Hotel Minas Bahia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-blue-600">Hotel Minas Bahia</h1>
+                <div class="flex space-x-4">
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Status do Caixa -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Status do Caixa</h2>
+                    <p id="statusCaixa" class="text-lg">
+                        <span class="hidden" id="caixaFechado">
+                            <i class="fas fa-lock text-red-500"></i> Caixa Fechado
+                        </span>
+                        <span class="hidden" id="caixaAberto">
+                            <i class="fas fa-lock-open text-green-500"></i> Caixa Aberto
+                        </span>
+                    </p>
+                </div>
+                <div>
+                    <button id="btnAbrirCaixa" onclick="abrirModalAberturaCaixa()" 
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 hidden">
+                        <i class="fas fa-cash-register mr-2"></i>Abrir Caixa
+                    </button>
+                    <button id="btnFecharCaixa" onclick="abrirModalFechamentoCaixa()" 
+                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hidden">
+                        <i class="fas fa-lock mr-2"></i>Fechar Caixa
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Saldo Atual -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Saldo Atual</h3>
+                <p class="text-3xl font-bold text-blue-600" id="saldoAtual">R$ 0,00</p>
+            </div>
+
+            <!-- Entradas do Dia -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Entradas Hoje</h3>
+                <p class="text-3xl font-bold text-green-600" id="entradasHoje">R$ 0,00</p>
+            </div>
+
+            <!-- Saídas do Dia -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Saídas Hoje</h3>
+                <p class="text-3xl font-bold text-red-600" id="saidasHoje">R$ 0,00</p>
+            </div>
+        </div>
+
+        <!-- Ações e Relatórios -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Ações Rápidas -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4">Ações Rápidas</h3>
+                <div class="space-y-4">
+                    <button onclick="abrirModalEntrada()" 
+                            class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-plus mr-2"></i>Nova Entrada
+                    </button>
+                    <button onclick="abrirModalSaida()" 
+                            class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        <i class="fas fa-minus mr-2"></i>Nova Saída
+                    </button>
+                </div>
+            </div>
+
+            <!-- Relatórios -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4">Relatórios</h3>
+                <div class="space-y-4">
+                    <button onclick="gerarRelatorio('diario')" 
+                            class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-file-alt mr-2"></i>Relatório Diário
+                    </button>
+                    <button onclick="abrirModalRelatorioPersonalizado()" 
+                            class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <i class="fas fa-calendar-alt mr-2"></i>Relatório Personalizado
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4">Movimentações do Dia</h3>
+                <canvas id="graficoMovimentacoes"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4">Formas de Pagamento</h3>
+                <canvas id="graficoFormasPagamento"></canvas>
+            </div>
+        </div>
+
+        <!-- Últimas Movimentações -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold mb-4">Últimas Movimentações</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data/Hora</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Categoria</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaMovimentacoes" class="bg-white divide-y divide-gray-200">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Abertura de Caixa -->
+    <div id="modalAberturaCaixa" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <!-- Conteúdo do modal -->
+    </div>
+
+    <!-- Modal de Fechamento de Caixa -->
+    <div id="modalFechamentoCaixa" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <!-- Conteúdo do modal -->
+    </div>
+
+    <!-- Modal de Nova Entrada/Saída -->
+    <div id="modalMovimentacao" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <!-- Conteúdo do modal -->
+    </div>
+
+    <!-- Modal de Relatório Personalizado -->
+    <div id="modalRelatorio" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <!-- Conteúdo do modal -->
+    </div>
+
+    <script src="js/caixa.js"></script>
+</body>
+</html>

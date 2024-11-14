@@ -151,6 +151,18 @@ try {
                 ");
                 $stmt->execute([$dados['quarto_id']]);
 
+                // Criar registro de pagamento
+                $stmt = $pdo->prepare("
+                    INSERT INTO pagamentos_quartos 
+                    (checkin_id, valor, forma_pagamento, data_pagamento, status)
+                    VALUES (?, ?, ?, NOW(), 'pendente')
+                ");
+                $stmt->execute([
+                    $checkinId,
+                    $dados['valor_total'],
+                    $dados['forma_pagamento'] ?? 'dinheiro'
+                ]);
+
                 $pdo->commit();
                 echo json_encode([
                     'success' => true,

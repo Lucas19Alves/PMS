@@ -32,12 +32,54 @@ CREATE TABLE IF NOT EXISTS `cadastros` (
   UNIQUE KEY `cpf` (`cpf`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela hotel_minas_bahia.cadastros: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela hotel_minas_bahia.cadastros: ~3 rows (aproximadamente)
 DELETE FROM `cadastros`;
 INSERT INTO `cadastros` (`id`, `nome`, `cpf`, `data_nascimento`, `telefone`, `cidade`, `data_cadastro`) VALUES
 	(1, 'João Silva', '123.456.789-00', '1990-01-15', '(31) 99999-9999', 'Belo Horizonte', '2024-11-04 22:06:06'),
 	(2, 'Maria Santos', '987.654.321-00', '1985-05-20', '(31) 98888-8888', 'Contagem', '2024-11-04 22:06:06'),
 	(3, 'Lucas Pereira Alves', '402.897.768-13', '2000-05-12', '(77) 99115-6978', 'Mortugaba', '2024-11-04 22:06:38');
+
+-- Copiando estrutura para tabela hotel_minas_bahia.caixa_controle
+CREATE TABLE IF NOT EXISTS `caixa_controle` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `data_abertura` datetime NOT NULL,
+  `data_fechamento` datetime DEFAULT NULL,
+  `valor_inicial` decimal(10,2) NOT NULL,
+  `valor_final` decimal(10,2) DEFAULT NULL,
+  `valor_diferenca` decimal(10,2) DEFAULT NULL,
+  `status` enum('aberto','fechado') NOT NULL,
+  `observacoes` text,
+  `usuario_id` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Copiando dados para a tabela hotel_minas_bahia.caixa_controle: ~2 rows (aproximadamente)
+DELETE FROM `caixa_controle`;
+INSERT INTO `caixa_controle` (`id`, `data_abertura`, `data_fechamento`, `valor_inicial`, `valor_final`, `valor_diferenca`, `status`, `observacoes`, `usuario_id`) VALUES
+	(1, '2024-11-14 15:06:53', '2024-11-14 15:07:21', 0.00, 0.00, 0.00, 'fechado', '', 1),
+	(2, '2024-11-14 15:13:43', '2024-11-14 15:15:06', 0.00, 100.00, 0.00, 'fechado', '', 1);
+
+-- Copiando estrutura para tabela hotel_minas_bahia.caixa_movimentacoes
+CREATE TABLE IF NOT EXISTS `caixa_movimentacoes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `caixa_controle_id` int NOT NULL,
+  `tipo` enum('entrada','saida') NOT NULL,
+  `categoria` varchar(50) NOT NULL,
+  `descricao` text NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  `forma_pagamento` varchar(50) NOT NULL,
+  `data_hora` datetime NOT NULL,
+  `referencia_id` int DEFAULT NULL,
+  `referencia_tipo` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `caixa_controle_id` (`caixa_controle_id`),
+  CONSTRAINT `caixa_movimentacoes_ibfk_1` FOREIGN KEY (`caixa_controle_id`) REFERENCES `caixa_controle` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Copiando dados para a tabela hotel_minas_bahia.caixa_movimentacoes: ~1 rows (aproximadamente)
+DELETE FROM `caixa_movimentacoes`;
+INSERT INTO `caixa_movimentacoes` (`id`, `caixa_controle_id`, `tipo`, `categoria`, `descricao`, `valor`, `forma_pagamento`, `data_hora`, `referencia_id`, `referencia_tipo`) VALUES
+	(1, 2, 'entrada', 'hospedagem', '102', 100.00, 'dinheiro', '2024-11-14 15:14:02', NULL, NULL);
 
 -- Copiando estrutura para tabela hotel_minas_bahia.checkins
 CREATE TABLE IF NOT EXISTS `checkins` (
@@ -56,15 +98,18 @@ CREATE TABLE IF NOT EXISTS `checkins` (
   KEY `titular_id` (`titular_id`),
   CONSTRAINT `checkins_ibfk_1` FOREIGN KEY (`quarto_id`) REFERENCES `quartos` (`id`),
   CONSTRAINT `checkins_ibfk_2` FOREIGN KEY (`titular_id`) REFERENCES `cadastros` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela hotel_minas_bahia.checkins: ~4 rows (aproximadamente)
+-- Copiando dados para a tabela hotel_minas_bahia.checkins: ~7 rows (aproximadamente)
 DELETE FROM `checkins`;
 INSERT INTO `checkins` (`id`, `quarto_id`, `titular_id`, `data_checkin`, `data_checkout_previsto`, `data_checkout_real`, `valor_total`, `desconto`, `status`, `created_at`) VALUES
 	(1, 8, 3, '2024-11-04 22:41:00', '2024-11-05 20:41:00', '2024-11-04 19:58:21', 110.00, 50.00, 'finalizado', '2024-11-04 22:42:17'),
 	(2, 7, 3, '2024-11-04 22:45:00', '2024-11-05 10:00:00', '2024-11-04 19:58:25', 120.00, 0.00, 'finalizado', '2024-11-04 22:46:07'),
 	(3, 9, 3, '2024-11-04 22:47:00', '2024-11-05 10:00:00', '2024-11-04 19:53:51', 10000.00, 0.00, 'finalizado', '2024-11-04 22:47:45'),
-	(4, 12, 3, '2024-11-04 22:50:00', '2024-11-05 10:00:00', '2024-11-04 19:58:17', 8000.00, 0.00, 'finalizado', '2024-11-04 22:50:45');
+	(4, 12, 3, '2024-11-04 22:50:00', '2024-11-05 10:00:00', '2024-11-04 19:58:17', 8000.00, 0.00, 'finalizado', '2024-11-04 22:50:45'),
+	(5, 12, 3, '2024-11-13 16:58:00', '2024-11-14 12:00:00', '2024-11-13 13:59:47', 16000.00, 0.00, 'finalizado', '2024-11-13 16:59:38'),
+	(6, 10, 3, '2024-11-13 17:39:00', '2024-11-14 08:39:00', '2024-11-13 14:40:02', 30000.00, 0.00, 'finalizado', '2024-11-13 17:39:46'),
+	(7, 8, 3, '2024-11-14 17:23:00', '2024-11-15 17:23:00', NULL, 16000.00, 0.00, 'ativo', '2024-11-14 17:23:35');
 
 -- Copiando estrutura para tabela hotel_minas_bahia.checkin_acompanhantes
 CREATE TABLE IF NOT EXISTS `checkin_acompanhantes` (
@@ -76,13 +121,16 @@ CREATE TABLE IF NOT EXISTS `checkin_acompanhantes` (
   KEY `cadastro_id` (`cadastro_id`),
   CONSTRAINT `checkin_acompanhantes_ibfk_1` FOREIGN KEY (`checkin_id`) REFERENCES `checkins` (`id`),
   CONSTRAINT `checkin_acompanhantes_ibfk_2` FOREIGN KEY (`cadastro_id`) REFERENCES `cadastros` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela hotel_minas_bahia.checkin_acompanhantes: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela hotel_minas_bahia.checkin_acompanhantes: ~5 rows (aproximadamente)
 DELETE FROM `checkin_acompanhantes`;
 INSERT INTO `checkin_acompanhantes` (`id`, `checkin_id`, `cadastro_id`) VALUES
 	(1, 2, 1),
-	(2, 2, 2);
+	(2, 2, 2),
+	(3, 5, 1),
+	(4, 6, 1),
+	(5, 7, 2);
 
 -- Copiando estrutura para tabela hotel_minas_bahia.hospedes
 CREATE TABLE IF NOT EXISTS `hospedes` (
@@ -116,6 +164,25 @@ CREATE TABLE IF NOT EXISTS `movimentacao_caixa` (
 -- Copiando dados para a tabela hotel_minas_bahia.movimentacao_caixa: ~0 rows (aproximadamente)
 DELETE FROM `movimentacao_caixa`;
 
+-- Copiando estrutura para tabela hotel_minas_bahia.pagamentos_quartos
+CREATE TABLE IF NOT EXISTS `pagamentos_quartos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `checkin_id` int NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  `forma_pagamento` varchar(50) NOT NULL,
+  `data_pagamento` datetime NOT NULL,
+  `caixa_movimentacao_id` int DEFAULT NULL,
+  `status` enum('pendente','confirmado','cancelado') NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `checkin_id` (`checkin_id`),
+  KEY `caixa_movimentacao_id` (`caixa_movimentacao_id`),
+  CONSTRAINT `pagamentos_quartos_ibfk_1` FOREIGN KEY (`checkin_id`) REFERENCES `checkins` (`id`),
+  CONSTRAINT `pagamentos_quartos_ibfk_2` FOREIGN KEY (`caixa_movimentacao_id`) REFERENCES `caixa_movimentacoes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Copiando dados para a tabela hotel_minas_bahia.pagamentos_quartos: ~0 rows (aproximadamente)
+DELETE FROM `pagamentos_quartos`;
+
 -- Copiando estrutura para tabela hotel_minas_bahia.quartos
 CREATE TABLE IF NOT EXISTS `quartos` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -136,11 +203,11 @@ INSERT INTO `quartos` (`id`, `numero`, `tipo`, `capacidade`, `preco_diaria`, `st
 	(5, '301', 'Simples', 2, 350.00, 'disponivel', '2024-11-04 21:46:10'),
 	(6, '302', 'Simples', 2, 500.00, 'disponivel', '2024-11-04 21:46:10'),
 	(7, '101', 'Simples', 5, 40.00, 'sujo', '2024-11-04 22:58:25'),
-	(8, '101', 'Simples', 2, 80.00, 'sujo', '2024-11-04 22:58:21'),
-	(9, '102', 'Ventilador com Banheiro', 2, 100.00, 'sujo', '2024-11-04 22:53:51'),
-	(10, '103', 'Ar Condicionado', 2, 150.00, 'disponivel', '2024-11-04 21:46:10'),
+	(8, '101', 'Simples', 2, 80.00, 'ocupado', '2024-11-14 17:23:35'),
+	(9, '102', 'Ventilador com Banheiro', 2, 100.00, 'disponivel', '2024-11-13 17:40:15'),
+	(10, '103', 'Ar Condicionado', 2, 150.00, 'disponivel', '2024-11-13 17:40:09'),
 	(11, '104', 'Luxo', 2, 200.00, 'disponivel', '2024-11-04 21:46:10'),
-	(12, '102', 'Ar Condicionado', 3, 80.00, 'disponivel', '2024-11-05 18:18:30');
+	(12, '102', 'Ar Condicionado', 3, 80.00, 'disponivel', '2024-11-13 17:40:11');
 
 -- Copiando estrutura para tabela hotel_minas_bahia.reservas
 CREATE TABLE IF NOT EXISTS `reservas` (
