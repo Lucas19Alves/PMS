@@ -59,6 +59,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
+    switch ($_GET['action']) {
+        case 'verificar_ocupacao':
+            $quarto_id = $_GET['quarto_id'] ?? null;
+            if (!$quarto_id) {
+                echo json_encode(['error' => true, 'message' => 'ID do quarto não fornecido']);
+                exit;
+            }
+
+            $stmt = $pdo->prepare("
+                SELECT COUNT(*) as ocupado 
+                FROM checkins 
+                WHERE quarto_id = ? 
+                AND data_checkout IS NULL
+            ");
+            $stmt->execute([$quarto_id]);
+            $result = $stmt->fetch();
+
+            echo json_encode([
+                'success' => true,
+                'ocupado' => $result['ocupado'] > 0
+            ]);
+            break;
+
+        case 'get_hospedagem_atual':
+            $quarto_id = $_GET['quarto_id'] ?? null;
+            if (!$quarto_id) {
+                echo json_encode(['error' => true, 'message' => 'ID do quarto não fornecido']);
+                exit;
+            }
+
+            $stmt = $pdo->prepare("
+                SELECT c.*, h.nome as hospede_nome
+                FROM checkins c
+                JOIN hospedes h ON c.hospede_id = h.id
+                WHERE c.quarto_id = ? 
+                AND c.data_checkout IS NULL
+                ORDER BY c.data_checkin DESC
+                LIMIT 1
+            ");
+            $stmt->execute([$quarto_id]);
+            $hospedagem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$hospedagem) {
+                echo json_encode(['success' => false, 'message' => 'Nenhuma hospedagem ativa encontrada']);
+                exit;
+            }
+
+            echo json_encode(['success' => true, 'data' => $hospedagem]);
+            break;
+    }
+}
+
 try {
     // Log do input recebido
     $input = file_get_contents('php://input');
