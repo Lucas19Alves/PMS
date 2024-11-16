@@ -248,51 +248,44 @@ async function verificarOcupacao(quartoId) {
     try {
         const response = await fetch(`./api/checkin.php?action=verificar_ocupacao&quarto_id=${quartoId}`);
         const data = await response.json();
-        return data.ocupado || false;
+        console.log('Resposta da verificação de ocupação:', data);
+        return data.ocupado === true;
     } catch (error) {
         console.error('Erro ao verificar ocupação:', error);
         return false;
     }
 }
 
-// Nova função para iniciar processo de checkout
-async function iniciarCheckout(quarto) {
-    if (!quarto) {
-        alert('Erro: Quarto não selecionado');
-        return;
-    }
+ async function iniciarCheckout(quarto) {
+     if (!quarto) {
+         alert('Erro: Quarto não selecionado');
+         return;
+     }
 
-    // Verifica se o caixa está aberto
-    const caixaAberto = await verificarStatusCaixa();
-    if (!caixaAberto) {
-        mostrarModalCaixaFechado();
-        return;
-    }
+     // Verifica se o caixa está aberto
+     const caixaAberto = await verificarStatusCaixa();
+     if (!caixaAberto) {
+         mostrarModalCaixaFechado();
+         return;
+     }
 
-    // Verifica se o quarto está ocupado
-    const ocupado = await verificarOcupacao(quarto.id);
-    if (!ocupado) {
-        alert('Este quarto não está ocupado');
-        return;
-    }
+     // Verifica se o quarto está ocupado
+     const ocupacaoResult = await verificarOcupacao(quarto.id);
+     console.log('Resultado da verificação de ocupação:', ocupacaoResult);
 
-    try {
-        // Busca os dados da hospedagem atual
-        const response = await fetch(`./api/checkin.php?action=get_hospedagem_atual&quarto_id=${quarto.id}`);
-        const result = await response.json();
+     if (!ocupacaoResult.ocupado) {
+         alert(`Este quarto não está ocupado. Detalhes: ${JSON.stringify(ocupacaoResult.debug_info)}`);
+         return;
+     }
 
-        if (!result.success) {
-            throw new Error('Não foi possível carregar os dados da hospedagem');
-        }
-
-        // Mostra o modal de checkout com os dados da hospedagem
-        mostrarModalPagamentoCheckout(result.data);
-        fecharModal(); // Fecha o modal de ações rápidas
-    } catch (error) {
-        console.error('Erro:', error);
-        alert(error.message);
-    }
-}
+     try {
+         // Busca os dados da hospedagem atual
+         // ... (resto do código)
+     } catch (error) {
+         console.error('Erro ao iniciar checkout:', error);
+         alert('Erro ao iniciar o processo de checkout. Por favor, tente novamente.');
+     }
+ }
 
 // Função para mostrar modal de pagamento do check-out
 function mostrarModalPagamentoCheckout(hospedagem) {
@@ -303,12 +296,12 @@ function mostrarModalPagamentoCheckout(hospedagem) {
     const modalContent = `
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Check-out - Quarto ${quartoSelecionado.numero}</h3>
-                <button onclick="fecharModal()" class="text-gray-600 hover:text-gray-800">
+                <h3 class="text-xl font-bold">Check-out ${hospedagem.numero_quarto ? `- Quarto ${hospedagem.numero_quarto}` : ''}</h3>
+                <button onclick="fecharModalPagamentoCheckout()" class="text-gray-600 hover:text-gray-800">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div class="mb-6">
                 <h4 class="font-semibold mb-2">Informações da Hospedagem</h4>
                 <div class="grid grid-cols-2 gap-4 text-sm">
@@ -326,20 +319,20 @@ function mostrarModalPagamentoCheckout(hospedagem) {
             <form id="formPagamentoCheckout" onsubmit="finalizarCheckout(event, ${hospedagem.id})" class="space-y-4">
                 <div class="border-t pt-4">
                     <h4 class="font-semibold mb-4">Resumo Financeiro</h4>
-                    
+
                     <div class="space-y-3">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Valor Total</label>
                             <input type="text" value="${formatarMoeda(valorTotal)}" readonly
                                 class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm">
                         </div>
-                        
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Valor Já Pago</label>
                             <input type="text" value="${formatarMoeda(valorJaPago)}" readonly
                                 class="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm">
                         </div>
-                        
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Saldo a Pagar</label>
                             <input type="text" value="${formatarMoeda(saldoAPagar)}" readonly
@@ -350,7 +343,7 @@ function mostrarModalPagamentoCheckout(hospedagem) {
 
                 <div class="border-t pt-4">
                     <h4 class="font-semibold mb-4">Pagamento</h4>
-                    
+
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Forma de Pagamento</label>
@@ -369,7 +362,7 @@ function mostrarModalPagamentoCheckout(hospedagem) {
                                    id="valorPagamentoCheckout" 
                                    required 
                                    min="0" 
-                                   max="${saldoAPagar}" 
+                                   max="${saldoAPagar}"
                                    step="0.01"
                                    value="${saldoAPagar}"
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
@@ -379,7 +372,7 @@ function mostrarModalPagamentoCheckout(hospedagem) {
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-4 border-t">
-                    <button type="button" onclick="fecharModal()"
+                    <button type="button" onclick="fecharModalPagamentoCheckout()"
                         class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                         Cancelar
                     </button>
@@ -397,6 +390,12 @@ function mostrarModalPagamentoCheckout(hospedagem) {
     modalContainer.classList.remove('hidden');
 }
 
+function fecharModalPagamentoCheckout() {
+    const modalContainer = document.getElementById('modalPagamentoCheckout');
+    modalContainer.classList.add('hidden');
+}
+
+
 // Função para finalizar check-out
 async function finalizarCheckout(event, checkinId) {
     event.preventDefault();
@@ -407,11 +406,15 @@ async function finalizarCheckout(event, checkinId) {
     try {
         // Registrar pagamento no caixa
         if (valorPagamento > 0) {
+            let descricao = 'Hospedagem - Check-out';
+            if (quartoSelecionado && quartoSelecionado.numero) {
+                descricao += ` Quarto ${quartoSelecionado.numero}`;
+            }
             await registrarPagamentoCaixa(
                 'entrada',
                 valorPagamento,
                 formaPagamento,
-                `Hospedagem - Check-out Quarto ${quartoSelecionado.numero}`
+                descricao
             );
         }
 
@@ -434,6 +437,7 @@ async function finalizarCheckout(event, checkinId) {
         const result = await response.json();
         if (result.success) {
             alert('Check-out realizado com sucesso!');
+            fecharModalPagamentoCheckout();
             window.location.reload();
         } else {
             throw new Error(result.message || 'Erro ao realizar check-out');
@@ -442,6 +446,11 @@ async function finalizarCheckout(event, checkinId) {
         console.error('Erro:', error);
         alert('Erro ao finalizar check-out: ' + error.message);
     }
+}
+
+function fecharModalPagamentoCheckout() {
+    const modalContainer = document.getElementById('modalPagamentoCheckout');
+    modalContainer.classList.add('hidden');
 }
 
 // Modal para quarto sujo

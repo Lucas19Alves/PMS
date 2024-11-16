@@ -5,112 +5,114 @@ ini_set('display_errors', 1);
 require_once '../config/database.php';
 header('Content-Type: application/json');
 
+// Função para verificar ocupação
+function verificarOcupacao($pdo, $quarto_id) {
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) as ocupado 
+        FROM checkins 
+        WHERE quarto_id = ? 
+        AND status = 'ativo'
+    ");
+    $stmt->execute([$quarto_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return [
+        'success' => true,
+        'ocupado' => $result['ocupado'] > 0,
+        'debug_info' => [
+            'quarto_id' => $quarto_id,
+            'count' => $result['ocupado']
+        ]
+    ];
+}
+
+// Função para obter hospedagem atual
+function getHospedagemAtual($pdo, $quarto_id) {
+    $stmt = $pdo->prepare("
+        SELECT c.*, t.nome as hospede_nome
+        FROM checkins c
+        JOIN cadastros t ON c.titular_id = t.id
+        WHERE c.quarto_id = ? 
+        AND c.status = 'ativo'
+        ORDER BY c.data_checkin DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$quarto_id]);
+    $hospedagem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$hospedagem) {
+        return ['success' => false, 'message' => 'Nenhuma hospedagem ativa encontrada'];
+    }
+
+    return ['success' => true, 'data' => $hospedagem];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    try {
-        $quarto_id = $_GET['quarto_id'] ?? null;
-        
-        if (!$quarto_id) {
-            throw new Exception('ID do quarto não informado');
-        }
+    $action = $_GET['action'] ?? '';
+    $quarto_id = $_GET['quarto_id'] ?? null;
 
-        $sql = "
-            SELECT 
-                c.*,
-                q.numero as quarto_numero,
-                t.nome as titular_nome,
-                t.cpf as titular_cpf
-            FROM checkins c
-            JOIN quartos q ON q.id = c.quarto_id
-            JOIN cadastros t ON t.id = c.titular_id
-            WHERE c.quarto_id = ? 
-            AND c.status = 'ativo'
-            ORDER BY c.data_checkin DESC
-            LIMIT 1
-        ";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$quarto_id]);
-        $checkin = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$checkin) {
-            throw new Exception('Nenhuma hospedagem ativa encontrada');
-        }
-
-        // Buscar acompanhantes
-        $stmt = $pdo->prepare("
-            SELECT c.nome, c.cpf
-            FROM checkin_acompanhantes ca
-            JOIN cadastros c ON c.id = ca.cadastro_id
-            WHERE ca.checkin_id = ?
-        ");
-        $stmt->execute([$checkin['id']]);
-        $checkin['acompanhantes'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        echo json_encode($checkin);
-        exit;
-
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode([
-            'error' => true,
-            'message' => $e->getMessage()
-        ]);
+    if (!$quarto_id) {
+        echo json_encode(['error' => true, 'message' => 'ID do quarto não fornecido']);
         exit;
     }
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
-    switch ($_GET['action']) {
+    switch ($action) {
         case 'verificar_ocupacao':
-            $quarto_id = $_GET['quarto_id'] ?? null;
-            if (!$quarto_id) {
-                echo json_encode(['error' => true, 'message' => 'ID do quarto não fornecido']);
-                exit;
-            }
-
-            $stmt = $pdo->prepare("
-                SELECT COUNT(*) as ocupado 
-                FROM checkins 
-                WHERE quarto_id = ? 
-                AND data_checkout IS NULL
-            ");
-            $stmt->execute([$quarto_id]);
-            $result = $stmt->fetch();
-
-            echo json_encode([
-                'success' => true,
-                'ocupado' => $result['ocupado'] > 0
-            ]);
+            echo json_encode(verificarOcupacao($pdo, $quarto_id));
             break;
-
         case 'get_hospedagem_atual':
-            $quarto_id = $_GET['quarto_id'] ?? null;
-            if (!$quarto_id) {
-                echo json_encode(['error' => true, 'message' => 'ID do quarto não fornecido']);
-                exit;
-            }
-
-            $stmt = $pdo->prepare("
-                SELECT c.*, h.nome as hospede_nome
-                FROM checkins c
-                JOIN hospedes h ON c.hospede_id = h.id
-                WHERE c.quarto_id = ? 
-                AND c.data_checkout IS NULL
-                ORDER BY c.data_checkin DESC
-                LIMIT 1
-            ");
-            $stmt->execute([$quarto_id]);
-            $hospedagem = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$hospedagem) {
-                echo json_encode(['success' => false, 'message' => 'Nenhuma hospedagem ativa encontrada']);
-                exit;
-            }
-
-            echo json_encode(['success' => true, 'data' => $hospedagem]);
+            echo json_encode(getHospedagemAtual($pdo, $quarto_id));
             break;
+
+        default:
+            // Código existente para buscar informações do check-in
+            try {
+                $sql = "
+                    SELECT 
+                        c.*,
+                        q.numero as quarto_numero,
+                        t.nome as titular_nome,
+                        t.cpf as titular_cpf
+                    FROM checkins c
+                    JOIN quartos q ON q.id = c.quarto_id
+                    JOIN cadastros t ON t.id = c.titular_id
+                    WHERE c.quarto_id = ? 
+                    AND c.status = 'ativo'
+                    ORDER BY c.data_checkin DESC
+                    LIMIT 1
+                ";
+
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$quarto_id]);
+                $checkin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$checkin) {
+                    throw new Exception('Nenhuma hospedagem ativa encontrada');
+                }
+
+                // Buscar acompanhantes
+                $stmt = $pdo->prepare("
+                    SELECT c.nome, c.cpf
+                    FROM checkin_acompanhantes ca
+                    JOIN cadastros c ON c.id = ca.cadastro_id
+                    WHERE ca.checkin_id = ?
+                ");
+                $stmt->execute([$checkin['id']]);
+                $checkin['acompanhantes'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                echo json_encode($checkin);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode([
+                    'error' => true,
+                    'message' => $e->getMessage()
+                ]);
+            }
     }
+    exit;
 }
+
+// Restante do código para POST requests (create e checkout)...
 
 try {
     // Log do input recebido
@@ -122,7 +124,7 @@ try {
     }
 
     $dados = json_decode($input, true);
-    
+
     // Log dos dados decodificados
     error_log('Dados decodificados: ' . print_r($dados, true));
 
@@ -172,7 +174,7 @@ try {
                         status
                     ) VALUES (?, ?, ?, ?, ?, ?, 'ativo')
                 ");
-                
+
                 $stmt->execute([
                     $dados['quarto_id'],
                     $dados['titular_id'],
@@ -232,7 +234,7 @@ try {
         case 'checkout':
             // Iniciar transação
             $pdo->beginTransaction();
-            
+
             try {
                 // Buscar o check-in e o quarto
                 $stmt = $pdo->prepare("
@@ -286,4 +288,4 @@ try {
         'message' => $e->getMessage()
     ]);
 }
-?> 
+?>
