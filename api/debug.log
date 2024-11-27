@@ -3,8 +3,8 @@ Array
     [HTTP_HOST] => localhost
     [HTTP_CONNECTION] => keep-alive
     [HTTP_SEC_CH_UA_PLATFORM] => "Windows"
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
-    [HTTP_SEC_CH_UA] => "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+    [HTTP_SEC_CH_UA] => "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"
     [HTTP_SEC_CH_UA_MOBILE] => ?0
     [HTTP_ACCEPT] => */*
     [HTTP_SEC_FETCH_SITE] => same-origin
@@ -30,7 +30,7 @@ Array
     [CONTEXT_DOCUMENT_ROOT] => C:/laragon/www
     [SERVER_ADMIN] => admin@example.com
     [SCRIPT_FILENAME] => C:/laragon/www/PMS/api/quartos.php
-    [REMOTE_PORT] => 53938
+    [REMOTE_PORT] => 50927
     [GATEWAY_INTERFACE] => CGI/1.1
     [SERVER_PROTOCOL] => HTTP/1.1
     [REQUEST_METHOD] => GET
@@ -38,6 +38,6 @@ Array
     [REQUEST_URI] => /PMS/api/quartos.php
     [SCRIPT_NAME] => /PMS/api/quartos.php
     [PHP_SELF] => /PMS/api/quartos.php
-    [REQUEST_TIME_FLOAT] => 1731609094.7321
-    [REQUEST_TIME] => 1731609094
+    [REQUEST_TIME_FLOAT] => 1732733306.6713
+    [REQUEST_TIME] => 1732733306
 )
