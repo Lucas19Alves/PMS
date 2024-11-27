@@ -12,12 +12,12 @@ Array
     [HTTP_SEC_FETCH_DEST] => empty
     [HTTP_REFERER] => http://localhost/PMS/index.html
     [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
-    [HTTP_ACCEPT_LANGUAGE] => pt-PT,pt;q=0.9
-    [PATH] => c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\Hotel MB\AppData\Local\Microsoft\WindowsApps;C:\Users\Hotel MB\flutter\bin;C:\Program Files\Java\jdk1.8.0_221\bin;C:\kotlinc\bin;C:\Users\Hotel MB\adb-fastboot\platform-tools;C:\Users\Hotel MB\AppData\Roaming\npm;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Hotel MB\AppData\Local\Microsoft\WindowsApps;C:\Users\Hotel MB\flutter\bin;C:\Program Files\Java\jdk1.8.0_221\bin;C:\kotlinc\bin;C:\Users\Hotel MB\adb-fastboot\platform-tools;C:\Users\Hotel MB\AppData\Roaming\npm;c:\Users\Hotel MB\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Hotel MB\AppData\Local\Microsoft\WindowsApps;C:\Users\Hotel MB\flutter\bin;C:\Program Files\Java\jdk1.8.0_221\bin;C:\kotlinc\bin;C:\Users\Hotel MB\adb-fastboot\platform-tools;C:\Users\Hotel MB\AppData\Roaming\npm;C:\Users\Hotel MB\AppData\Local\Programs\Microsoft VS Code\bin
-    [SystemRoot] => C:\Windows
-    [COMSPEC] => C:\Windows\system32\cmd.exe
+    [HTTP_ACCEPT_LANGUAGE] => pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+    [PATH] => C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\WINDOWS\AtlasModules;C:\WINDOWS\AtlasModules\Tools;C:\WINDOWS\AtlasModules\Scripts;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;c:\Users\lucaa\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\lucaa\AppData\Local\Microsoft\WindowsApps;C:\Users\lucaa\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\lucaa\AppData\Roaming\npm
+    [SystemRoot] => C:\WINDOWS
+    [COMSPEC] => C:\WINDOWS\system32\cmd.exe
     [PATHEXT] => .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
-    [WINDIR] => C:\Windows
+    [WINDIR] => C:\WINDOWS
     [SERVER_SIGNATURE] => 
     [SERVER_SOFTWARE] => Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
     [SERVER_NAME] => localhost
@@ -30,7 +30,7 @@ Array
     [CONTEXT_DOCUMENT_ROOT] => C:/laragon/www
     [SERVER_ADMIN] => admin@example.com
     [SCRIPT_FILENAME] => C:/laragon/www/PMS/api/quartos.php
-    [REMOTE_PORT] => 50927
+    [REMOTE_PORT] => 51325
     [GATEWAY_INTERFACE] => CGI/1.1
     [SERVER_PROTOCOL] => HTTP/1.1
     [REQUEST_METHOD] => GET
@@ -38,6 +38,6 @@ Array
     [REQUEST_URI] => /PMS/api/quartos.php
     [SCRIPT_NAME] => /PMS/api/quartos.php
     [PHP_SELF] => /PMS/api/quartos.php
-    [REQUEST_TIME_FLOAT] => 1732733306.6713
-    [REQUEST_TIME] => 1732733306
+    [REQUEST_TIME_FLOAT] => 1731753296.192
+    [REQUEST_TIME] => 1731753296
 )
